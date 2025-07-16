@@ -1,0 +1,306 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theological Debate: Reformed Protestant vs. Roman Catholic</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4 !important;
+            color: #000 !important;
+            margin: 20px;
+        }
+        #chat {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: white !important;
+            height: 600px;
+            overflow-y: scroll;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            color: #000 !important;
+        }
+        .protestant {
+            background-color: #d9f7ff;
+            text-align: left;
+        }
+        .catholic {
+            background-color: #ffd9d9;
+            text-align: right;
+        }
+        .speaker {
+            font-weight: bold;
+        }
+        #controls {
+            max-width: 800px;
+            margin: 10px auto;
+            text-align: center;
+        }
+        #countdown {
+            display: inline-block;
+            margin-left: 10px;
+            font-style: italic;
+        }
+        .rebuttal-prefix {
+            font-style: italic;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Theological Debate: Reformed Protestant vs. Roman Catholic</h1>
+    <p>Two simulated LLMs with PhDs in theology and philosophy engage in an endless argument. The Reformed Protestant emphasizes the Five Solas, drawing on Calvin, Luther, and Scripture. The Roman Catholic defends Church authority, Tradition, and the Magisterium, referencing Aquinas, Trent, and patristic sources. Arguments are drawn from historical debates and are presented randomly but alternately for an ongoing dialogue.</p>
+    <div id="chat"></div>
+    <div id="controls">
+        <button id="pauseButton">Pause</button>
+        <div id="countdown"></div>
+    </div>
+
+    <script>
+        const protestantArguments = [
+            { topic: 'scripture_tradition', text: "As a Reformed theologian, I must insist on Sola Scriptura: the Bible alone is the infallible rule of faith. The Roman Catholic elevation of Tradition to equal status undermines the sufficiency of God's Word, as warned in Colossians 2:8 against human philosophies. Historically, this led to abuses like indulgences, which sparked the Reformation." },
+            { topic: 'justification', text: "Justification by faith alone is the heart of the Gospel. Romans 3:28 declares we are justified by faith apart from works of the law. The Council of Trent's anathemas against this doctrine introduce a works-righteousness that obscures the grace of Christ, echoing Pelagianism condemned by Augustine." },
+            { topic: 'papacy', text: "The papacy lacks biblical foundation. Matthew 16:18 refers to Peter's confession, not a monarchical office. Early church history shows no universal recognition of Roman primacy; it developed gradually, as even Catholic historians like von Dollinger admitted before Vatican I." },
+            { topic: 'eucharist', text: "Transubstantiation is a philosophical imposition on the Eucharist, relying on Aristotelian categories alien to Scripture. Christ said 'This is my body' as a metaphor, much like 'I am the door.' The Reformers rightly restored it as a memorial, avoiding the repeated sacrifice that Hebrews 10:10 declares once-for-all." },
+            { topic: 'mary_saints', text: "Veneration of Mary and saints verges on idolatry. Scripture commands worship of God alone (Exodus 20:3-5). The dogmas of Immaculate Conception and Assumption are late innovations, absent from the Fathers and contrary to Romans 3:23 that all have sinned." },
+            { topic: 'predestination_freewill', text: "God's sovereign predestination ensures salvation is by grace alone. Ephesians 1:4-5 teaches election before the foundation of the world. Catholic semi-Pelagianism, emphasizing free will, diminishes divine sovereignty, as Calvin masterfully argued against Pighius." },
+            { topic: 'purgatory_indulgences', text: "Purgatory has no scriptural basis; it's derived from 2 Maccabees, a deuterocanonical book not in the Jewish canon. Christ's atonement is complete (Hebrews 9:28), rendering posthumous purification unnecessary and indulgences a corruption exposed by Tetzel's scandals." },
+            { topic: 'mass_sacrifice', text: "The Mass as a propitiatory sacrifice contradicts Hebrews 7:27, where Christ's offering is once-for-all. This doctrine perpetuates a priesthood that mediates grace, whereas 1 Timothy 2:5 affirms Christ as the sole mediator." },
+            { topic: 'apostolic_succession_priesthood', text: "Apostolic succession as claimed by Rome ignores the spiritual succession of doctrine over physical lineage. The Reformers, like Knox in Scotland, preserved true apostolic teaching against Roman accretions." },
+            { topic: 'sacraments', text: "The multiplication of sacraments to seven adds human rites like confirmation and holy orders without clear biblical mandate. Baptism and the Lord's Supper suffice as ordained by Christ Himself." },
+            { topic: 'baptism', text: "Infant baptism lacks scriptural warrant, as baptism in the New Testament follows belief (Acts 8:36-38). Catholic paedobaptism confuses covenant signs, leading to presumption of regeneration without personal faith, contrary to the Reformation's emphasis on believer's baptism." },
+            { topic: 'priesthood_celibacy', text: "Mandatory clerical celibacy contradicts 1 Timothy 3:2-5, where bishops are to be husbands of one wife managing households well. This Roman imposition, formalized at Lateran II, has historically fostered scandals, as Luther noted in his marriage to Katharina von Bora." },
+            { topic: 'canon', text: "The inclusion of apocryphal books in the canon elevates non-inspired texts, rejected by Jerome and absent from the Hebrew Bible. Trent's declaration merely reacted to Protestant challenges, undermining the authority of the 66-book canon recognized by early Jews and Christians." },
+            { topic: 'mary_saints', text: "Invocation of saints dilutes direct access to Christ, violating Hebrews 4:16's call to approach the throne of grace boldly. This practice, evolving from early veneration, mirrors pagan intercessions, as critiqued by Calvin in his Institutes." },
+            { topic: 'church_authority', text: "Roman ecclesiology centralizes power in a hierarchy, suppressing the priesthood of all believers (1 Peter 2:9). The Reformation restored congregational governance, echoing the early church's plurality of elders, against Rome's monarchical episcopate." },
+            { topic: 'papacy', text: "The doctrine of papal infallibility, defined at Vatican I, is a 19th-century novelty without patristic support. Historical popes like Liberius and Honorius erred, proving the claim's ahistoricity, as even Catholic scholars like Kung have argued." },
+            { topic: 'justification', text: "Merit-based salvation in Catholicism introduces human boasting, contra Ephesians 2:8-9. Aquinas' congruent merit still mingles works with grace, whereas Reformed theology upholds monergism, preserving God's glory alone." },
+            { topic: 'mary_saints', text: "The Assumption of Mary, dogmatized in 1950, lacks any biblical or early historical evidence. Origen and Epiphanius knew nothing of it, highlighting Rome's tendency to elevate traditions over Scripture." },
+            { topic: 'predestination_freewill', text: "Catholic emphasis on free will in salvation revives Pelagian errors condemned at Orange (529 AD). Arminian leanings in Rome dilute Augustine's grace, as the Reformers reclaimed in the Synod of Dort." },
+            { topic: 'reformation_history', text: "The Roman Church's historical corruption, from medieval simony to modern scandals, testifies to its fallibility. The Reformation was not schism but necessary purification, as prophesied in Revelation's calls to 'come out of Babylon.'" },
+            { topic: 'scripture_tradition', text: "Sola Scriptura is affirmed by church fathers like Athanasius, who appealed to Scripture against Arianism, not unwritten traditions. Catholic Tradition often contradicts Scripture, leading to innovations like the Assumption." },
+            { topic: 'justification', text: "The imputed righteousness of Christ is the only basis for justification, as in 2 Corinthians 5:21. Trent's canons confuse justification with sanctification, a distinction clarified by Melanchthon in the Apology of the Augsburg Confession." },
+            { topic: 'papacy', text: "Peter's role was foundational but not supreme; Galatians 2 shows Paul rebuking him, undermining claims of infallibility. Rome's primacy was honorific in the early councils, not jurisdictional." },
+            { topic: 'eucharist', text: "The Lord's Supper is a spiritual presence by faith, as Calvin taught, not local transubstantiation. John 6 is about believing in Christ, not literal eating, avoiding the Capernaite error." },
+            { topic: 'mary_saints', text: "Mary was blessed but a sinner needing a Savior (Luke 1:47). Dulia veneration blurs into latria worship, as seen in popular piety, contrary to God's jealousy in Isaiah 42:8." },
+            { topic: 'predestination_freewill', text: "Election is unconditional, based on God's decree, not foreseen faith, as Rome teaches. Romans 9:11-16 emphasizes mercy, not works or will, refuting semi-Pelagian tendencies." },
+            { topic: 'purgatory_indulgences', text: "1 John 1:7 says the blood of Jesus cleanses from all sin—no need for purgatory. Indulgences commodify grace, a practice Luther rightly decried as tetzelian exploitation." },
+            { topic: 'mass_sacrifice', text: "Hebrews 9:22 declares remission by one shedding of blood, Christ's, not repeated in the Mass. This re-sacrificing implies insufficiency in the cross." },
+            { topic: 'apostolic_succession_priesthood', text: "True succession is fidelity to apostolic teaching, not tactile ordination. The Donatist controversy showed character and doctrine matter more than lineage, as Augustine argued." },
+            { topic: 'sacraments', text: "Only baptism and Eucharist have a dominical institution and sign of grace. Other 'sacraments' are good practices but not vehicles of grace ex opere operato." },
+            { topic: 'church_authority', text: "The church is the pillar of truth (1 Timothy 3:15), but subject to Scripture. Rome's magisterium has erred, as in the pornocracy era, necessitating reformation." },
+            { topic: 'reformation_history', text: "The Peasants' War was a distortion of Lutheran teaching, but Rome's Inquisition and Index Librorum Prohibitorum suppressed truth, as in Galileo's case, showing tyranny over conscience." },
+            { topic: 'papacy', text: "Papal authority in the first thousand years was limited, more 'first among equals' rather than supreme, and its development raises questions about its divine origin." },
+            { topic: 'scripture_tradition', text: "Sola Scriptura asserts that all doctrines must derive from Scripture or necessary deductions, as it is uniquely divinely inspired and authoritative." },
+            { topic: 'church_authority', text: "Catholic doctrines developed over time, suggesting they were not present in the early church, indicating additions rather than organic growth." },
+            { topic: 'reformation_history', text: "Many Catholic practices, like Easter and Christmas, have pagan origins, making them un-Christian influences." },
+            { topic: 'papacy', text: "The Pope as 'vicar of Christ' stands in place of Christ, fulfilling the role of the antichrist as described in Scripture." },
+            { topic: 'church_authority', text: "The prevalence of lukewarm Catholics who do not take faith seriously undermines the Church's claim to be the true body of Christ." },
+            { topic: 'mary_saints', text: "Requiring belief in Marian dogmas under pain of damnation elevates them beyond what Scripture warrants." },
+            { topic: 'justification', text: "Catholics lack assurance of salvation, which is unbiblical and less comforting than the Protestant view of once-saved-always-saved." },
+            { topic: 'church_authority', text: "The Roman Catholic Church is the 'Whore of Babylon' in Revelation, associated with Rome's seven hills and corruption." },
+            { topic: 'reformation_history', text: "The Catholic Church killed millions of Bible-believing Christians during the Dark Ages, showing its oppressive history." },
+            { topic: 'papacy', text: "Papal infallibility is based on faulty history; Peter was not the first pope, and there was no monarchical bishop in Rome until late, with many corrupt popes disproving the claim." },
+            { topic: 'mary_saints', text: "Marian doctrines like Immaculate Conception and Assumption dogmatize popular piety, making Mary more central than Scripture allows." },
+            { topic: 'justification', text: "Catholic justification mingles works with grace, differing from the evangelical emphasis on faith alone in Christ's finished work." },
+            { topic: 'scripture_tradition', text: "The Bible is sufficient for faith and practice (2 Timothy 3:16-17), making extrabiblical tradition unnecessary and potentially contradictory." },
+            { topic: 'scripture_tradition', text: "Scripture is the final authority, as Jesus used 'It is written' to rebuke tradition that nullified God's word (Matthew 15:3,6)." },
+            { topic: 'scripture_tradition', text: "No new revelation beyond the first century, and warnings against adding to Scripture (Deuteronomy 4:2) support Sola Scriptura." },
+            { topic: 'scripture_tradition', text: "All essential apostolic tradition is preserved in Scripture, the only inspired record after the apostles' death." },
+            { topic: 'scripture_tradition', text: "Oral traditions are unreliable and prone to corruption, as seen in John 21:22-23, while written Scripture is durable and fixed." },
+            { topic: 'scripture_tradition', text: "Contradictory traditions, like on the Apocrypha or Immaculate Conception, make tradition an unreliable authority." },
+            { topic: 'scripture_tradition', text: "Catholic selection of infallible traditions is arbitrary, such as including Apocrypha despite opposition or late Marian dogmas." },
+            { topic: 'scripture_tradition', text: "The Bible is perspicuous on essentials, not needing uninspired traditions for interpretation." }
+        ];
+
+        const catholicArguments = [
+            { topic: 'scripture_tradition', text: "Drawing on my expertise in Thomistic philosophy, I affirm that Sacred Tradition and the Magisterium are essential alongside Scripture, as 2 Thessalonians 2:15 enjoins holding to traditions taught by word or epistle. Protestant sola scriptura has birthed endless schisms, fulfilling Christ's prayer for unity in John 17 only through the visible Church." },
+            { topic: 'justification', text: "Justification involves infusion of grace, not mere imputation. James 2:24 explicitly states we are justified by works and not by faith alone. The Protestant view truncates Paul's teaching, ignoring the synergistic cooperation with grace as in Philippians 2:12-13 and the Council of Trent's decrees." },
+            { topic: 'papacy', text: "The Petrine primacy is evident in Matthew 16:18-19, where Christ builds His Church on Peter, the rock. Historical testimony from Irenaeus and Cyprian confirms Rome's preeminence, providing the unity lacking in Protestantism's fragmented denominations." },
+            { topic: 'eucharist', text: "The Real Presence in the Eucharist is literal, as Christ commanded in John 6:53-56 to eat His flesh for eternal life. Patristic witnesses like Justin Martyr and Ambrose affirm transubstantiation's essence, countering the Zwinglian symbolism that reduces it to a mere sign." },
+            { topic: 'mary_saints', text: "Honoring Mary as Theotokos is biblical (Luke 1:48) and dogmatic, rooted in Ephesus (431 AD). Protestant rejection of her sinlessness ignores typological fulfillment of the Ark of the Covenant, pure for God's presence, and leads to a diminished Christology." },
+            { topic: 'predestination_freewill', text: "Reformed double predestination borders on fatalism, contradicting 1 Timothy 2:4 that God desires all to be saved. Aquinas' distinction between sufficient and efficacious grace preserves free will, avoiding the Calvinist God who authors evil." },
+            { topic: 'sacraments', text: "Sola fide overlooks the necessity of sacraments as channels of grace. Acts 2:38 links baptism to forgiveness, a means instituted by Christ, whereas Protestant reductionism subjectivizes salvation to personal assurance alone." },
+            { topic: 'canon', text: "The canon of Scripture was discerned by the Church at councils like Hippo (393 AD). Protestants inconsistently accept the New Testament while rejecting deuterocanonicals, undermining their own sola scriptura by relying on Catholic Tradition." },
+            { topic: 'purgatory_indulgences', text: "Indulgences, properly understood, apply Christ's merits through the Church's treasury, as per Matthew 16:19's binding and loosing. Luther's Ninety-Five Theses misrepresented abuses, not the doctrine, which echoes 1 Corinthians 3:13-15's purifying fire." },
+            { topic: 'apostolic_succession_priesthood', text: "Protestant rejection of the priesthood ignores Hebrews 5:1 and the ongoing ministry of alter Christus. The Reformers' 'priesthood of all believers' flattens hierarchy, leading to individualism contrary to the communal Body of 1 Corinthians 12." },
+            { topic: 'reformation_history', text: "The Protestant Reformation was not a reform but a revolution, fracturing Christ's Body against His will for unity (John 17:21). Luther's innovations, like removing books from the Bible, echo the heresies condemned at early councils." },
+            { topic: 'scripture_tradition', text: "Sola scriptura leads to interpretive chaos, with over 30,000 denominations proving its impracticality. The Church's Magisterium, promised the Spirit's guidance (John 16:13), safeguards truth as it did against Arianism." },
+            { topic: 'mass_sacrifice', text: "Reformed denial of the sacrificial Mass ignores Malachi 1:11's prophecy of a pure offering among Gentiles. Ignatius of Antioch's early witness to the Eucharist as sacrifice aligns with Catholic continuity." },
+            { topic: 'justification', text: "Perseverance of the saints encourages antinomianism, as warned in Hebrews 6:4-6 about falling away. Catholic teaching on mortal sin upholds moral accountability, rooted in Augustine's anti-Donatist writings." },
+            { topic: 'church_authority', text: "Protestant ecclesiology lacks visible unity and authority, reducing the Church to an invisible abstraction. Vatican II's Lumen Gentium reaffirms the hierarchical structure mirrored in the apostolic college." },
+            { topic: 'papacy', text: "The rejection of papal authority ignores Clement of Rome's intervention in Corinth (c. 96 AD), demonstrating early Roman primacy. Protestant individualism revives Gnostic elitism over communal faith." },
+            { topic: 'icons', text: "Calvin's iconoclasm destroys sacred art, contrary to the Second Council of Nicaea (787 AD) defending images against iconoclasts. This Protestant barrenness impoverishes worship, as seen in Byzantine defenses." },
+            { topic: 'predestination_freewill', text: "Arminian free will in some Protestant circles still falls short, but Reformed determinism makes God the author of sin, contra James 1:13. Thomistic predestination harmonizes sovereignty and liberty." },
+            { topic: 'scripture_tradition', text: "Luther's addition of 'alone' to Romans 3:28 alters Scripture, a charge he leveled at Catholics. This hypocrisy underscores the Reformers' selective biblicism, as critiqued by Erasmus." },
+            { topic: 'reformation_history', text: "Protestant history whitewashes the violence of the Peasants' War and Münster Rebellion, spawned by Reformation radicalism. Catholic Counter-Reformation, via Trent, brought genuine renewal without schism." },
+            { topic: 'scripture_tradition', text: "Tradition is necessary to interpret Scripture, as the Ethiopian eunuch needed Philip in Acts 8. Protestant private judgment leads to contradictions, like varying views on baptism." },
+            { topic: 'justification', text: "Faith without works is dead (James 2:26), so justification includes transformation. The Reformers' forensic view ignores the parable of the sheep and goats in Matthew 25." },
+            { topic: 'papacy', text: "Peter is the shepherd in John 21:15-17, commissioned to feed the flock. Historical appeals to Rome, like by Ignatius, affirm its stabilizing role against heresies." },
+            { topic: 'eucharist', text: "The Eucharist unites us to Christ's sacrifice, as Paul warns in 1 Corinthians 11:27-29 about unworthy reception. Symbolic views diminish the covenant meal's reality." },
+            { topic: 'mary_saints', text: "Intercession of saints is biblical, as in Revelation 5:8 where elders offer prayers. Mary's fiat (Luke 1:38) models discipleship, not competition with Christ." },
+            { topic: 'predestination_freewill', text: "Molinasim balances predestination with free cooperation; Calvinism's supralapsarianism borders on Manicheanism. God respects human freedom in salvation." },
+            { topic: 'purgatory_indulgences', text: "Purgatory purifies as gold in fire (1 Peter 1:7), a merciful process. Indulgences draw from saints' merits, fostering ecclesial solidarity against individualism." },
+            { topic: 'mass_sacrifice', text: "The Mass re-presents Calvary timelessly, fulfilling 'Do this in remembrance.' Early liturgies like Didache confirm its sacrificial character." },
+            { topic: 'apostolic_succession_priesthood', text: "Ordination imparts indelible character (2 Timothy 1:6), ensuring succession. Protestant ministerial offices lack this sacramental validity." },
+            { topic: 'sacraments', text: "Seven sacraments correspond to life's stages, instituted by Christ implicitly or explicitly. Reducing them impoverishes grace's ordinary means." },
+            { topic: 'church_authority', text: "The Church is visible and infallible in faith/morals (Matthew 18:18). Schisms like Protestantism's fulfill warnings against division in 1 Corinthians 1:10." },
+            { topic: 'reformation_history', text: "Luther's 95 Theses sparked valid critique but led to anarchy; Trent reformed abuses while preserving doctrine, unlike the radical Reformers." },
+            { topic: 'papacy', text: "The papacy evolved like a mustard seed into a tree, as in Jesus's parables, showing natural growth rather than invention." },
+            { topic: 'scripture_tradition', text: "Sola Scriptura is a 'motte and bailey' fallacy, switching from scripture's unique inspiration (agreed) to requiring all doctrines from it alone (disputed)." },
+            { topic: 'church_authority', text: "Doctrinal development is natural and guided by the Holy Spirit, like a puppy growing into a dog, not deviation." },
+            { topic: 'reformation_history', text: "Claims of pagan origins for Catholic practices are often false; converting pagans retained customs without adopting deities." },
+            { topic: 'papacy', text: "The antichrist denies Jesus's incarnation (1 John 2:22), which the Church opposes, emphasizing bodily sacraments." },
+            { topic: 'church_authority', text: "Lukewarm Catholics are a personal failure, not doctrinal; saints prove the faith, and grace is available like power from a station." },
+            { topic: 'mary_saints', text: "Marian dogmas aid in growing closer to God; rejecting truth knowingly burdens the soul, but truth should not be avoided." },
+            { topic: 'justification', text: "Guaranteed assurance is unbiblical (Hebrews 6:4-6); it leads to complacency, while striving for salvation is emphasized." },
+            { topic: 'church_authority', text: "The 'Whore of Babylon' refers to the Roman Empire, not the Church; Vatican City isn't on the seven hills." },
+            { topic: 'reformation_history', text: "Claims of millions killed are impossible given medieval populations and are Enlightenment propaganda." },
+            { topic: 'papacy', text: "Papal infallibility is limited to faith and morals; historical corrupt popes don't disprove it, as infallibility isn't impeccability." },
+            { topic: 'mary_saints', text: "Marian dogmas reflect ancient beliefs, like the Assumption in early liturgies, not mere popular piety." },
+            { topic: 'justification', text: "Justification infuses grace for transformation, aligning with James 2:24, not just forensic covering." },
+            { topic: 'scripture_tradition', text: "Scripture's sufficiency doesn't exclude tradition; the Church discerned the canon, showing tradition's role." },
+            { topic: 'scripture_tradition', text: "Jesus rebuked corrupt traditions, not all; valid tradition complements Scripture, as in 2 Thessalonians 2:15." },
+            { topic: 'scripture_tradition', text: "Ongoing magisterial guidance prevents schisms; Protestant divisions show Sola Scriptura's flaws." },
+            { topic: 'scripture_tradition', text: "Apostolic traditions include oral teachings preserved by the Church, not all written down." },
+            { topic: 'scripture_tradition', text: "Oral tradition's reliability is ensured by the Holy Spirit's guidance of the Church." },
+            { topic: 'scripture_tradition', text: "Consensus of fathers supports core doctrines; disagreements are on non-essentials." },
+            { topic: 'scripture_tradition', text: "Dogmas like Assumption have traditional support, declared when challenged." },
+            { topic: 'scripture_tradition', text: "Scripture needs authoritative interpretation; perspicuity leads to varied Protestant views." }
+        ];
+
+        let paused = false;
+        let currentTimeout = null;
+        let countdownTimer = null;
+        let lastTopic = null;
+        let messageCount = 0;
+        let usedProtestantIndices = new Set();
+        let usedCatholicIndices = new Set();
+
+        const pauseButton = document.getElementById('pauseButton');
+        const countdownDiv = document.getElementById('countdown');
+
+        pauseButton.addEventListener('click', () => {
+            paused = !paused;
+            pauseButton.textContent = paused ? 'Resume' : 'Pause';
+            if (paused) {
+                if (currentTimeout) clearTimeout(currentTimeout);
+                if (countdownTimer) clearInterval(countdownTimer);
+                countdownDiv.textContent = '';
+            } else {
+                debate(); // Resume by starting the next cycle immediately
+            }
+        });
+
+        function startCountdown(seconds) {
+            if (paused) return;
+            let time = seconds;
+            countdownDiv.textContent = `Next message in ${time} seconds`;
+            countdownTimer = setInterval(() => {
+                time--;
+                if (time > 0) {
+                    countdownDiv.textContent = `Next message in ${time} seconds`;
+                } else {
+                    clearInterval(countdownTimer);
+                    countdownDiv.textContent = '';
+                }
+            }, 1000);
+        }
+
+        function pickArgument(argumentsList, preferredTopic) {
+            const usedSet = argumentsList === protestantArguments ? usedProtestantIndices : usedCatholicIndices;
+            let candidateIndices = preferredTopic 
+                ? argumentsList.reduce((acc, arg, idx) => { if (arg.topic === preferredTopic) acc.push(idx); return acc; }, [])
+                : Array.from({length: argumentsList.length}, (_, i) => i);
+            if (candidateIndices.length === 0) {
+                candidateIndices = Array.from({length: argumentsList.length}, (_, i) => i); // Fallback to all
+            }
+            let unusedIndices = candidateIndices.filter(idx => !usedSet.has(idx));
+            if (unusedIndices.length === 0) {
+                usedSet.clear();
+                unusedIndices = candidateIndices;
+            }
+            const selectedIdx = unusedIndices[Math.floor(Math.random() * unusedIndices.length)];
+            usedSet.add(selectedIdx);
+            return argumentsList[selectedIdx];
+        }
+
+        function addMessage(speaker, arg, prefix = '') {
+            const chat = document.createElement('div');
+            chat.classList.add('message');
+            const className = speaker.toLowerCase().includes('protestant') ? 'protestant' : 'catholic';
+            chat.classList.add(className);
+            const messageText = prefix + arg.text;
+            chat.innerHTML = `<span class="speaker">${speaker} Theologian (PhD):</span> ${messageText}`;
+            document.getElementById('chat').appendChild(chat);
+            chat.scrollIntoView({ behavior: 'smooth' });
+            messageCount++;
+        }
+
+        function debate() {
+            if (paused) return;
+
+            console.log('Debate starting...');
+
+            // For Protestant
+            let rebutTopicProt = lastTopic;
+            let isRebuttalProt = true;
+            if (Math.random() < 0.3) {
+                rebutTopicProt = null;
+                isRebuttalProt = false;
+            }
+            const protArg = pickArgument(protestantArguments, rebutTopicProt);
+            let prefixProt = '';
+            if (messageCount > 0) {
+                if (isRebuttalProt) {
+                    prefixProt = `<span class="rebuttal-prefix">In response to your point on ${lastTopic.replace(/_/g, ' ')}:</span>`;
+                } else {
+                    prefixProt = `<span class="rebuttal-prefix">Addressing a new issue:</span>`;
+                }
+            }
+            addMessage('Reformed Protestant', protArg, prefixProt);
+            lastTopic = protArg.topic;
+            console.log('Added Protestant message');
+
+            startCountdown(5);
+
+            currentTimeout = setTimeout(() => {
+                if (paused) return;
+
+                // For Catholic
+                let rebutTopicCath = lastTopic;
+                let isRebuttalCath = true;
+                if (Math.random() < 0.3) {
+                    rebutTopicCath = null;
+                    isRebuttalCath = false;
+                }
+                const cathArg = pickArgument(catholicArguments, rebutTopicCath);
+                let prefixCath = '';
+                if (isRebuttalCath) {
+                    prefixCath = `<span class="rebuttal-prefix">In response to your point on ${lastTopic.replace(/_/g, ' ')}:</span>`;
+                } else {
+                    prefixCath = `<span class="rebuttal-prefix">Turning to another matter:</span>`;
+                }
+                addMessage('Roman Catholic', cathArg, prefixCath);
+                lastTopic = cathArg.topic;
+                console.log('Added Catholic message');
+
+                startCountdown(5);
+
+                currentTimeout = setTimeout(debate, 5000);
+            }, 5000);
+        }
+
+        debate();
+    </script>
+</body>
+</html>
+```
